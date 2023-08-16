@@ -5,49 +5,19 @@ import (
 )
 
 type DialConfig struct {
-	Host            string        `toml:"host"`
-	Port            int           `toml:"port"`
-	Database        int           `toml:"database"`
-	Password        string        `toml:"password"`
-	MaxIdle         int           `toml:"max_idle"`
-	MaxActive       int           `toml:"max_active"`
-	Wait            bool          `toml:"wait"`
-	ConnectTimeout  time.Duration `toml:"connect_timeout"`
-	ReadTimeout     time.Duration `toml:"read_timeout"`
-	MaxConnLifetime time.Duration `toml:"max_conn_lifetime"`
-	IdleTimeout     time.Duration `toml:"idle_timeout"`
+	Host            string        `toml:"host" json:"host,omitempty" yaml:"host" mapstructure:"host"`
+	Port            int           `toml:"port" json:"port,omitempty" yaml:"port" mapstructure:"port"`
+	Database        int           `toml:"database" json:"database,omitempty" yaml:"database" mapstructure:"database"`
+	Password        string        `toml:"password" json:"password,omitempty" yaml:"password" mapstructure:"password"`
+	MaxIdle         int           `toml:"max-idle" json:"max-idle,omitempty" yaml:"max-idle" mapstructure:"max-idle"`
+	MaxActive       int           `toml:"max-active" json:"max-active,omitempty" yaml:"max-active" mapstructure:"max-active"`
+	Wait            bool          `toml:"wait" json:"wait,omitempty" yaml:"wait" mapstructure:"wait"`
+	ConnectTimeout  time.Duration `toml:"connect-timeout" json:"connect-timeout,omitempty" yaml:"connect-timeout" mapstructure:"connect-timeout"`
+	ReadTimeout     time.Duration `toml:"read-timeout" json:"read-timeout,omitempty" yaml:"read-timeout" mapstructure:"read-timeout"`
+	MaxConnLifetime time.Duration `toml:"max-conn-lifetime" json:"max-conn-lifetime,omitempty" yaml:"max-conn-lifetime" mapstructure:"max-conn-lifetime"`
+	IdleTimeout     time.Duration `toml:"idle-timeout" json:"idle-timeout,omitempty" yaml:"idle-timeout" mapstructure:"idle-timeout"`
 }
 
-// MultiDialConfig
-//
-// Define MultiDialConfig item with name surrounded by `[[` and `]]`.
-//
-// Example:
-// [[redis]]
-// name="first"
-// default=true
-// config.host="localhost"
-// config.port=6379
-// config.database=0
-// config.connect_timeout="5s"
-// config.read_timeout="2s"
-// config.max_idle=1
-// config.max_active=3
-// config.idle_timeout="60s"
-// config.wait=true
-// config.max_conn_lifetime="3600s"
-// [[redis]]
-// name="second"
-// config.host="localhost"
-// config.port=6379
-// config.database=1
-// config.connect_timeout="5s"
-// config.read_timeout="2s"
-// config.max_idle=1
-// config.max_active=3
-// config.idle_timeout="60s"
-// config.wait=true
-// config.max_conn_lifetime="3600s"
 type MultiDialConfig struct {
 	Name    string      `toml:"name"`
 	Default bool        `toml:"default"`

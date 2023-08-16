@@ -5,18 +5,18 @@ import (
 )
 
 type Database struct {
-	DSN             string        `json:"dsn" toml:"dsn"`
-	Username        string        `json:"username" toml:"username"`
-	Password        string        `json:"password" toml:"password"`
-	Host            string        `json:"host" toml:"host"`
-	Database        string        `json:"database" toml:"database"`
-	MaxOpenConn     int           `json:"max_open_conn" toml:"max_open_conn"`
-	MaxIdleConn     int           `json:"max_idle_conn" toml:"max_idle_conn"`
-	ConnMaxIdleTime int           `json:"conn_max_idletime" toml:"conn_max_idletime"`
-	ConnMaxLifetime int           `json:"conn_max_lifetime" toml:"conn_max_lifetime"`
-	UseLog          bool          `json:"use_log" toml:"use_log"`
-	LogLevel        int           `json:"log_level" toml:"log_level"`
-	SlowLog         time.Duration `json:"slow_log" toml:"slow_log"`
-	TablePrefix     string        `json:"table_prefix" toml:"table_prefix""`
-	Singular        bool          `json:"singular" toml:"singular"`
+	DSN             string        `json:"dsn" toml:"dsn" yaml:"DSN" mapstructure:"DSN"`
+	Username        string        `json:"username" toml:"username" yaml:"username" mapstructure:"username"`
+	Password        string        `json:"password" toml:"password" yaml:"password" mapstructure:"password"`
+	Host            string        `json:"host" toml:"host" yaml:"host" mapstructure:"host"`
+	Database        string        `json:"database" toml:"database" yaml:"database" mapstructure:"database"`
+	MaxOpenConn     int           `json:"max-open-conn" toml:"max-open-conn" yaml:"max-open-conn" mapstructure:"max-open-conn"`
+	MaxIdleConn     int           `json:"max-idle-conn" toml:"max-idle-conn" yaml:"max-idle-conn" mapstructure:"max-idle-conn"`
+	ConnMaxIdleTime int           `json:"conn-max-idletime" toml:"conn-max-idletime" yaml:"conn-max-idletime" mapstructure:"conn-max-idletime"`
+	ConnMaxLifetime int           `json:"conn-max-lifetime" toml:"conn-max-lifetime" yaml:"conn-max-lifetime" mapstructure:"conn-max-lifetime"`
+	UseLog          bool          `json:"use-log" toml:"use-log" yaml:"use-log" mapstructure:"use-log"`
+	LogLevel        int           `json:"log-level" toml:"log-level" yaml:"log-level" mapstructure:"log-level"`
+	SlowLog         time.Duration `json:"slow-log" toml:"slow-log" yaml:"slow-log" mapstructure:"slow-log"`
+	TablePrefix     string        `json:"table-prefix" toml:"table-prefix" yaml:"table-prefix" mapstructure:"table-prefix"`
+	Singular        bool          `json:"singular" toml:"singular" yaml:"singular" mapstructure:"singular"`
 }
