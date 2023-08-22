@@ -24,6 +24,10 @@ func NewGormLogger() GormLogger {
 	}
 }
 
+func (l GormLogger) Printf(format string, args ...interface{}) {
+	l.logger().Sugar().Infof(format, args...)
+}
+
 // LogMode 实现 gormlogger.Interface 的 LogMode 方法
 func (l GormLogger) LogMode(level gormlogger.LogLevel) gormlogger.Interface {
 	return GormLogger{

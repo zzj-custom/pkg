@@ -74,7 +74,9 @@ func NewClient(dbs map[string]*Database) (map[string]*gorm.DB, error) {
 			}
 		}
 
-		cfg.Logger = NewGormLogger()
+		//l := logger.New(log.StandardLogger(), config)
+		l := logger.New(NewGormLogger(), config)
+		cfg.Logger = l
 
 		conn, err := gorm.Open(dialectal, cfg)
 		if err != nil {
