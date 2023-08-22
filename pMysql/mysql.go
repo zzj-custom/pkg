@@ -1,9 +1,11 @@
 package pMysql
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 	gormMySQL "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -75,14 +77,24 @@ func NewClient(dbs map[string]*Database) (map[string]*gorm.DB, error) {
 		}
 
 		//l := logger.New(log.StandardLogger(), config)
-		l := logger.New(NewGormLogger(), config)
-		cfg.Logger = l
+		//cfg.Logger = l
 
 		conn, err := gorm.Open(dialectal, cfg)
 		if err != nil {
 			log.Error("Failed to create connection for db: ", k)
 			continue
 		}
+
+		zapL, _ := zap.NewProduction()
+		SetGormDBLogger(conn, New(zapL, WithCustomFields(func(ctx context.Context) zap.Field {
+			item := ctx.Value("requestId")
+			if vv, ok := item.(string); ok {
+				return zap.String("requestId", vv)
+			}
+			return zap.Skip()
+		},
+		), WithConfig(config)))
+
 		sqlDB, err := conn.DB()
 		if err != nil {
 			log.Error("Failed to Connect to db server.")
