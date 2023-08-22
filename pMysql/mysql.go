@@ -61,23 +61,16 @@ func NewClient(dbs map[string]*Database) (map[string]*gorm.DB, error) {
 			LogLevel:                  0,
 		}
 		if v.UseLog {
-			var logLvl logger.LogLevel
 			if v.LogLevel > 0 && v.LogLevel <= 4 {
-				logLvl = logger.LogLevel(v.LogLevel)
+				config.LogLevel = logger.LogLevel(v.LogLevel)
 			} else {
-				logLvl = logger.Error
+				config.LogLevel = logger.Error
 			}
 
 			if v.SlowLog.String() != "" {
 				config.SlowThreshold = v.SlowLog * time.Millisecond
 			}
-			if logLvl > 0 {
-				config.LogLevel = logLvl
-			}
 		}
-
-		//l := logger.New(log.StandardLogger(), config)
-		//cfg.Logger = l
 
 		conn, err := gorm.Open(dialectal, cfg)
 		if err != nil {
