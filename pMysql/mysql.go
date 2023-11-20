@@ -1,11 +1,9 @@
 package pMysql
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	"go.uber.org/zap"
 	gormMySQL "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -16,27 +14,27 @@ import (
 )
 
 var (
-	dbOnce  sync.Once
-	clients map[string]*gorm.DB
-	err     error
+	dbOnce    sync.Once
+	dbManager map[string]*gorm.DB
+	err       error
 )
 
-func Connects() map[string]*gorm.DB {
-	return clients
+func Dbs() map[string]*gorm.DB {
+	return dbManager
 }
 
-func Connect(key string) (*gorm.DB, error) {
-	if clients == nil {
+func GetDb(key string) (*gorm.DB, error) {
+	if dbManager == nil {
 		return nil, errors.New("db connections not initialized")
 	}
-	conn, ok := clients[key]
+	conn, ok := dbManager[key]
 	if !ok {
 		return nil, errors.New("no such db connection defined")
 	}
 	return conn, nil
 }
 
-func NewClient(dbs map[string]*Database) (map[string]*gorm.DB, error) {
+func Setup(dbs map[string]*Database) (map[string]*gorm.DB, error) {
 	connects := map[string]*gorm.DB{}
 	for k, v := range dbs {
 		var dsn = buildDSN(v)
@@ -78,16 +76,6 @@ func NewClient(dbs map[string]*Database) (map[string]*gorm.DB, error) {
 			continue
 		}
 
-		zapL, _ := zap.NewProduction()
-		SetGormDBLogger(conn, New(zapL, WithCustomFields(func(ctx context.Context) zap.Field {
-			item := ctx.Value("requestId")
-			if vv, ok := item.(string); ok {
-				return zap.String("requestId", vv)
-			}
-			return zap.Skip()
-		},
-		), WithConfig(config)))
-
 		sqlDB, err := conn.DB()
 		if err != nil {
 			log.Error("Failed to Connect to db server.")
@@ -104,11 +92,11 @@ func NewClient(dbs map[string]*Database) (map[string]*gorm.DB, error) {
 	return connects, nil
 }
 
-func Client(dbs map[string]*Database) (map[string]*gorm.DB, error) {
+func DbInit(dbs map[string]*Database) (map[string]*gorm.DB, error) {
 	dbOnce.Do(func() {
-		clients, err = NewClient(dbs)
+		dbManager, err = Setup(dbs)
 	})
-	return clients, err
+	return dbManager, err
 }
 
 func buildDSN(v *Database) string {
